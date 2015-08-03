@@ -73,7 +73,6 @@ public class OrderMonitorData {
 
     private static String ORDER_DONE_KEY = "#trubeacon_ordermonitor_done";
 
-    //TODO: poll billing status frequently (20 seconds) for testing, but increase to fifteen minutes for the release
     private static int billingSeconds = 30;
 
     public static OrderMonitorData getOrderMonitorData(){
