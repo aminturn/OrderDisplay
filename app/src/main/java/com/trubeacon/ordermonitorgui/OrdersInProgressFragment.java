@@ -718,6 +718,10 @@ public class OrdersInProgressFragment extends Fragment {
 
                         detailString = detailString + String.valueOf(Character.toChars(9654)) + li.getName() + "\r\n";
 
+                        if(li.getUserData()!=null) {
+                            Log.v("line item userdata", li.getUserData());
+                        }
+
                         List<Modification> modList = li.getModifications();
                         if (modList != null) {
 

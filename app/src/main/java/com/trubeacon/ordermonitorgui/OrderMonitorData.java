@@ -144,7 +144,6 @@ public class OrderMonitorData {
 
     private void refreshBillingInfo(){
 
-
         CloverService.getService().getBillingInfo(mId,token,appId, new GetBillingInfo.GetBillingInfoCallback(){
             @Override
             public void onGetBillingInfo(AppBillingInfo appBillingInfo) {
