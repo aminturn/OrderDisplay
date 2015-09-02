@@ -227,6 +227,9 @@ public class OrderMonitorData {
 
     public void refreshOrders(){
 
+
+        //TODO: make this a user preference
+
         DateTime start = DateTime.now().minusMinutes(30);
         DateTime stop = DateTime.now();
 

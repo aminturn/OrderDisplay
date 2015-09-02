@@ -59,9 +59,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by Andrew on 4/30/2015.
@@ -155,7 +157,7 @@ public class OrdersInProgressFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.progress_menu,menu);
+        inflater.inflate(R.menu.progress_menu, menu);
     }
 
     @Override
@@ -376,13 +378,19 @@ public class OrdersInProgressFragment extends Fragment {
 
                 String detailString = "";
 
-                List<LineItem> lineItemList= topOrder.getLineItems();
+                List<LineItem> rawLiList= topOrder.getLineItems();
+                Set<LineItem> lineItemList = new HashSet<>();
+
 
                 if(lineItemList!=null) {
                     for (LineItem li : lineItemList) {
 
+                        //TODO: check for duplicate line items and place them on the same line
+
                         if(orderMonitorData.showLineItem(li.getName())) {
                             detailString = detailString + String.valueOf(Character.toChars(9654))+ li.getName() + "\r\n";
+
+
                             List<Modification> modList = li.getModifications();
 
                             //check for modifications to line item
@@ -400,6 +408,7 @@ public class OrdersInProgressFragment extends Fragment {
                                     detailString = detailString + " -" + mo.getName() + "\r\n";
                                 }
                             }
+
                             //check for custom modification
                             if (li.getNote() != null) {
                                 detailString = detailString + " -" + li.getNote() + "\r\n";
@@ -787,5 +796,43 @@ public class OrdersInProgressFragment extends Fragment {
         }
 
     }
+
+    private List<LineItem> checkForDuplicateLineItems(List<LineItem> rawLiList){
+
+        TreeSet<LineItem> noDupeTreeSet = new TreeSet<LineItem>(new Comparator<LineItem>() {
+            @Override
+            public int compare(LineItem li1, LineItem li2) {
+
+                if(li1.getName().equals(li2.getName())) {
+                    //if one, but not both is null, theyre not dupes
+                    if(li1.getModifications()==null^li2.getModifications()==null) {
+                    return -1;
+                    }
+
+                    //at this point, if one's null both are, so only need to check one
+                    if(li1.getModifications()!=null) {
+                        List<Modification> modList1 = li1.getModifications();
+                        List<Modification> modList2 = li2.getModifications();
+
+
+                        }
+
+                    }
+                    else {
+                      return -1;
+                    }
+
+
+                return 0;
+            }
+        });
+
+
+
+    }
+
+
+    }
+
 
 }
