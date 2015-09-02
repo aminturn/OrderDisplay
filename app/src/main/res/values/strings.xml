@@ -98,6 +98,18 @@
     <string name = "sp55">55 sp</string>
     <string name = "sp60">60 sp</string>
 
+    <string name = "str0.5">0.5</string>
+    <string name = "str1">1</string>
+    <string name="str1.5">1.5</string>
+    <string name = "str2">2</string>
+    <string name = "str2.5">2.5</string>
+    <string name = "str3">3</string>
+    <string name = "str3.5">3.5</string>
+    <string name = "str4">4</string>
+    <string name="str4.5">4.5</string>
+    <string name = "str5">5</string>
+    <string name = "str5.5">5.5</string>
+    <string name = "str6">6</string>
     <string name = "str10">10</string>
     <string name = "str15">15</string>
     <string name = "str20">20</string>
@@ -149,8 +161,18 @@
 
     <string name = "age_of_orders_pref">age_of_orders_pref</string>
 
-
-
+    <string name = "entry0.5">30 Mins</string>
+     <string name = "entry1">1 Hr</string>
+     <string name = "entry1.5">1 Hr 30 Min</string> 
+    <string name = "entry2">2 Hrs</string> 
+    <string name = "entry2.5">2 Hrs 30 Mins</string> 
+    <string name = "entry3">3 Hrs</string> 
+    <string name = "entry3.5">3 Hrs 30 Mins</string> 
+    <string name = "entry4">4 Hrs</string> 
+    <string name = "entry4.5">4 Hrs 30 Mins
+    </string> <string name = "entry5">5 Hrs</string>
+     <string name = "entry5.5">5 Hrs 30 Mins</string> 
+    <string name = "entry6">6 Hrs</string>
 
 
 </resources>

@@ -227,17 +227,18 @@ public class OrderMonitorData {
 
     public void refreshOrders(){
 
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String ageOfOrdersStr = sp.getString(mContext.getString(R.string.age_of_orders_pref), mContext.getString(R.string.age_of_orders_pref));
+        float ageOfOrdersHours = Float.parseFloat(ageOfOrdersStr);
+        int ageOfOrdersMinutes = (int) (ageOfOrdersHours*60);
 
-        //TODO: make this a user preference
-
-        DateTime start = DateTime.now().minusMinutes(30);
+        DateTime start = DateTime.now().minusMinutes(ageOfOrdersMinutes);
         DateTime stop = DateTime.now();
 
         if(mId.equals("")||token.equals("")){
             Toast.makeText(OrderMonitorGUI.getAppContext(), "Please connect to your Clover account from the Settings menu", Toast.LENGTH_LONG).show();
         }else {
 
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
             Long lastBillingCheck = sp.getLong(mContext.getString(R.string.last_billing_check), 0);
             DateTime lastBillingDateTime = new DateTime(lastBillingCheck);
             DateTime now = DateTime.now();
@@ -301,7 +302,6 @@ public class OrderMonitorData {
 
         boolean showLineItem = true;
 
-
             SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
             String[] defStrings = new String[1];
             Set<String> defset = new HashSet<>(Arrays.asList(defStrings));
@@ -317,7 +317,6 @@ public class OrderMonitorData {
                     }
                 }
             }
-
 
         return showLineItem;
     }

@@ -102,6 +102,9 @@ public class OrderMonitorPreferences extends PreferenceFragment implements Share
         Preference fontPref = findPreference(getString(R.string.font_size_pref));
         fontPref.setSummary(sp.getString(getString(R.string.font_size_pref), "") + " sp");
 
+        Preference agePref = findPreference(getString(R.string.age_of_orders_pref));
+        agePref.setSummary(sp.getString(getString(R.string.age_of_orders_pref),"") + " Hour(s)");
+
         refresh();
 
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -144,8 +147,10 @@ public class OrderMonitorPreferences extends PreferenceFragment implements Share
             Preference fontPref = findPreference(s);
             // Set summary to be the user-description for the selected value
             fontPref.setSummary(sharedPreferences.getString(s, "") + " sp");
+        }else if(s.equals(getString(R.string.age_of_orders_pref))){
+            Preference agePref = findPreference(s);
+            agePref.setSummary(sharedPreferences.getString(s,"") + " Hour(s)");
         }
-
     }
 
     @Override
