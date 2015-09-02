@@ -13,6 +13,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Handler;
@@ -77,7 +80,8 @@ public class OrdersInProgressFragment extends Fragment {
     private LayoutInflater mLayoutInflater;
     private List<Button> buttonList = new ArrayList<>();
 
-    private static String actionBarTitle = "Orders In Progress";
+
+    private ActionBar actionBar;
 
     private Handler periodicUpdateHandler = new Handler();
 
@@ -90,6 +94,7 @@ public class OrdersInProgressFragment extends Fragment {
     private boolean showOrigin;
     private float fontSize;
     private boolean showTimer;
+    private int previousListSize = 0;
 
     private Integer screenWidthDp;
     private OrderMonitorData orderMonitorData = OrderMonitorData.getOrderMonitorData();
@@ -271,10 +276,10 @@ public class OrdersInProgressFragment extends Fragment {
 
         showOrderType = sharedPref.getBoolean(getString(R.string.display_order_type_pref), true);
         showOrigin = sharedPref.getBoolean(getString(R.string.display_device_pref),true);
-        showTimer = sharedPref.getBoolean(getString(R.string.order_timer_pref),true);
+        showTimer = sharedPref.getBoolean(getString(R.string.order_timer_pref), true);
 
-        ActionBar actionBar = ((MainActivity) getActivity()).getSupportActionBar();
-        actionBar.setTitle(actionBarTitle);
+
+        actionBar = ((MainActivity) getActivity()).getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
 
         return scrollAndClearBtnLinLay;
@@ -282,6 +287,21 @@ public class OrdersInProgressFragment extends Fragment {
     }
 
     private void updateOrdersView() {
+
+        actionBar.setTitle(String.valueOf(progressOrdersList.size()) + " ORDER(S) IN PROGRESS");
+
+        SharedPreferences sp  = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        boolean playNotification = sp.getBoolean(getString(R.string.play_notification_pref),true);
+
+        if(playNotification) {
+            if (progressOrdersList.size() > previousListSize) {
+                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                Ringtone r = RingtoneManager.getRingtone(getActivity(), notification);
+                r.play();
+            }
+        }
+
+        previousListSize = progressOrdersList.size();
 
         buttonList.clear();
         countdownTvList.clear();

@@ -242,7 +242,6 @@ public class OrderMonitorPreferences extends PreferenceFragment implements Share
             tagPref.setEnabled(false);
             tagPref.setSummary(R.string.tag_pref_summary_disabled);
         }
-
     }
 
     private void updateTagPreferences(){
@@ -259,8 +258,6 @@ public class OrderMonitorPreferences extends PreferenceFragment implements Share
 
         tagPref.setEntries(entries);
         tagPref.setEntryValues(entryVals);
-
-
     }
 
 
@@ -301,7 +298,6 @@ public class OrderMonitorPreferences extends PreferenceFragment implements Share
 
             sp.edit().putBoolean(ORDER_TYPE_FIRST_TIME,false).apply();
         }
-
 
     }
 

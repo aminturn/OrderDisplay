@@ -38,6 +38,13 @@
                 android:entryValues="@array/order_age_values"
                 android:defaultValue="@string/str1.5"/>
 
+
+        <CheckBoxPreference
+            android:key = "@string/play_notification_pref"
+            android:title = "Play notification sound when new order is placed"
+            android:defaultValue="true"/>
+
+
             <CheckBoxPreference
                 android:key = "@string/display_order_type_pref"
                 android:title = "@string/display_order_type_pref_title"/>

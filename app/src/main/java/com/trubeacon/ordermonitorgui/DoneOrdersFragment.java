@@ -2,11 +2,15 @@ package com.trubeacon.ordermonitorgui;
 
 import android.animation.LayoutTransition;
 import android.app.Fragment;
+import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -48,14 +52,15 @@ public class DoneOrdersFragment extends Fragment {
         private String ORDER_TYPE_KEY = "order type preference";
 
         private static String FONT_SIZE_KEY = "font size preference";
-        private String actionBarTitle = "Completed Orders";
         private static int refreshRateMs = 5000;
 
+        private int previousListSize = 0;
         private float fontSize;
         private boolean twoRows;
         private boolean showOrderType;
         private boolean showDevice;
         private boolean showTimer;
+        private ActionBar actionBar;
 
         private Integer screenWidthDp;
         private OrderMonitorData orderMonitorData = OrderMonitorData.getOrderMonitorData();
@@ -163,8 +168,7 @@ public class DoneOrdersFragment extends Fragment {
             showDevice = sharedPref.getBoolean(getString(R.string.display_device_pref),true);
             showTimer = sharedPref.getBoolean(getString(R.string.order_timer_pref),true);
 
-            ActionBar actionBar = ((MainActivity) getActivity()).getSupportActionBar();
-            actionBar.setTitle(actionBarTitle);
+            actionBar = ((MainActivity) getActivity()).getSupportActionBar();
             actionBar.setDisplayHomeAsUpEnabled(false);
 
             doneOrdersList = orderMonitorData.getDoneOrdersList();
@@ -176,6 +180,21 @@ public class DoneOrdersFragment extends Fragment {
 
 
         private void updateOrdersView() {
+
+            actionBar.setTitle(String.valueOf(doneOrdersList.size()) + " ORDER(S) COMPLETED");
+
+            SharedPreferences sp  = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            boolean playNotification = sp.getBoolean(getString(R.string.play_notification_pref),true);
+
+            if(playNotification) {
+                if (doneOrdersList.size() > previousListSize) {
+                    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    Ringtone r = RingtoneManager.getRingtone(getActivity(), notification);
+                    r.play();
+                }
+            }
+
+            previousListSize = doneOrdersList.size();
 
             countdownTvList.clear();
 

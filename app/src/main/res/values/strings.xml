@@ -174,5 +174,7 @@
      <string name = "entry5.5">5 Hrs 30 Mins</string> 
     <string name = "entry6">6 Hrs</string>
 
+    <string name = "play_notification_pref">play_notification_pref</string>
+
 
 </resources>

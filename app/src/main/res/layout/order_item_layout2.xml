@@ -34,29 +34,31 @@
             android:background = "@color/dark_blue"
             android:text = "Order ID"/>
 
+        <Button
+            android:id = "@+id/done_button"
+            android:background="@color/dark_blue"
+            android:textColor = "@color/white"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="0dp"
+            android:padding="2dp"
+            android:text = "DONE"/>
+
         <TextView
             android:id="@+id/order_detail_text"
             android:scrollbars="vertical"
             android:scrollbarAlwaysDrawVerticalTrack="true"
             android:fadeScrollbars="false"
             android:layout_below="@id/order_id_text"
+            android:layout_above = "@id/done_button"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textSize="20sp"
             android:padding = "2dp"
             android:text = "Small Coffee"/>
 
-        <Button
-            android:id = "@+id/done_button"
-            android:background="@color/dark_blue"
-            android:textColor = "@color/white"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="2dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="0dp"
-            android:padding = "2dp"
-            android:text = "DONE"/>
+
 
     </RelativeLayout>
 
@@ -89,15 +91,6 @@
             android:textSize="20sp"
             android:text = "Order ID"/>
 
-        <TextView
-            android:id="@+id/order_detail_text2"
-            android:layout_below="@id/order_id_text2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding = "2dp"
-            android:textSize="20sp"
-            android:text = "Small Coffee"/>
-
         <Button
             android:id = "@+id/done_button2"
             android:layout_alignParentBottom="true"
@@ -109,6 +102,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text = "DONE"/>
+
+        <TextView
+            android:id="@+id/order_detail_text2"
+            android:layout_below="@id/order_id_text2"
+            android:layout_above="@+id/done_button2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding = "2dp"
+            android:textSize="20sp"
+            android:text = "Small Coffee"/>
+
 
     </RelativeLayout>
 
