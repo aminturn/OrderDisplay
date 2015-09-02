@@ -67,4 +67,32 @@
         <item>@string/lightgreencode</item>
     </array>
 
+    <array name = "order_age_entries"> 
+        <item>@string/entry0.5</item> 
+        <item>@string/entry1</item> 
+        <item>@string/entry1.5</item> 
+        <item>@string/entry2</item> 
+        <item>@string/entry2.5</item> 
+        <item>@string/entry3</item> 
+        <item>@string/entry3.5</item> 
+        <item>@string/entry4</item> 
+        <item>@string/entry4.5</item> 
+        <item>@string/entry5</item> 
+        <item>@string/entry5.5</item> 
+        <item>@string/entry6</item> </array>
+
+    <array name = "order_age_values"> 
+        <item>@string/str0.5</item> 
+        <item>@string/str1</item> 
+        <item>@string/str1.5</item> 
+        <item>@string/str2</item> 
+        <item>@string/str2.5</item> 
+        <item>@string/str3</item> 
+        <item>@string/str3.5</item> 
+        <item>@string/str4</item> 
+        <item>@string/str4.5</item> 
+        <item>@string/str5</item> 
+        <item>@string/str5.5</item> 
+        <item>@string/str6</item> </array>
+
 </resources>

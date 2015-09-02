@@ -31,22 +31,29 @@
             android:entryValues="@array/font_pref_values_array"
             android:defaultValue="@string/str20"/>
 
-        <CheckBoxPreference
-            android:key = "@string/display_order_type_pref"
-            android:title = "@string/display_order_type_pref_title"/>
+            <ListPreference
+                android:key = "@string/age_of_orders_pref"
+                android:title = "Age of orders to display"
+                android:entries = "@array/order_age_entries"
+                android:entryValues="@array/order_age_values"
+                android:defaultValue="@string/str1.5"/>
 
-        <CheckBoxPreference
-            android:key = "@string/display_device_pref"
-            android:title = "@string/display_device_pref_title"/>
+            <CheckBoxPreference
+                android:key = "@string/display_order_type_pref"
+                android:title = "@string/display_order_type_pref_title"/>
 
-        <CheckBoxPreference
-            android:key = "@string/order_timer_pref"
-            android:title = "@string/order_timer_pref_title"
-            android:defaultValue="true"/>
+            <CheckBoxPreference
+                android:key = "@string/display_device_pref"
+                android:title = "@string/display_device_pref_title"/>
 
-        <CheckBoxPreference
-            android:key = "@string/after_paid_pref"
-            android:title = "@string/after_paid_title"/>
+            <CheckBoxPreference
+                android:key = "@string/order_timer_pref"
+                android:title = "@string/order_timer_pref_title"
+                android:defaultValue="true"/>
+
+            <CheckBoxPreference
+                android:key = "@string/after_paid_pref"
+                android:title = "@string/after_paid_title"/>
 
     </PreferenceCategory>
 
