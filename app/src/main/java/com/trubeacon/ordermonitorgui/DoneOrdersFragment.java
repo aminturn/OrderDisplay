@@ -34,6 +34,7 @@ import org.joda.time.format.DateTimeFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -261,7 +262,8 @@ public class DoneOrdersFragment extends Fragment {
 
                     String detailString = "";
 
-                    List<LineItem> lineItemList= topOrder.getLineItems();
+                    List<LineItem> rawlineItemList= topOrder.getLineItems();
+                    List<LineItem> lineItemList = checkForDuplicateLineItems(rawlineItemList);
 
                     if(lineItemList!=null) {
                         for (LineItem li : lineItemList) {
@@ -433,7 +435,8 @@ public class DoneOrdersFragment extends Fragment {
 
                         orderTitleText2.setText(timeCreatedString2);
 
-                        List<LineItem> lineItemList2 = bottomOrder.getLineItems();
+                        List<LineItem> rawlineItemList2 = bottomOrder.getLineItems();
+                        List<LineItem> lineItemList2 = checkForDuplicateLineItems(rawlineItemList2);
 
                         if(lineItemList2!=null) {
                             for (LineItem li2 : lineItemList2) {
@@ -581,7 +584,8 @@ public class DoneOrdersFragment extends Fragment {
 
                 orderTitleText.setText(timeCreatedString);
 
-                List<LineItem> lineItemList = thisOrder.getLineItems();
+                List<LineItem> rawlineItemList = thisOrder.getLineItems();
+                List<LineItem> lineItemList = checkForDuplicateLineItems(rawlineItemList);
 
                 String detailString = "";
 
@@ -647,6 +651,60 @@ public class DoneOrdersFragment extends Fragment {
             }
 
         }
+
+    private List<LineItem> checkForDuplicateLineItems(List<LineItem> rawLiList){
+
+        List<Integer> hashList = new ArrayList<>();
+        HashMap<Integer,LineItem> lineItemHashMap = new HashMap<>();
+        List<LineItem> noDupeList = new ArrayList<>();
+
+        for(LineItem li:rawLiList){
+            int hash = hashCode(li);
+            lineItemHashMap.put(hash,li);
+            hashList.add(hash);
+        }
+
+        for(Integer hashFromMap:lineItemHashMap.keySet()){
+            int dupeCount = 0;
+
+            for(Integer hashFromList:hashList) {
+                if (hashFromList.equals(hashFromMap)) {
+                    dupeCount++;
+                }
+            }
+
+            if(dupeCount>1){
+                LineItem updateNameLi = lineItemHashMap.get(hashFromMap);
+                String liName = String.valueOf(dupeCount) + " " + updateNameLi.getName();
+                updateNameLi.setName(liName);
+                lineItemHashMap.put(hashFromMap,updateNameLi);
+            }
+
+            noDupeList.add(lineItemHashMap.get(hashFromMap));
+        }
+
+
+        return noDupeList;
+    }
+
+
+    private int hashCode(LineItem lineItem){
+
+        int nameHashCode = lineItem.getName().hashCode();
+
+        int modHashCode = 0;
+
+        if(lineItem.getModifications()!=null){
+            List<Modification> modList= lineItem.getModifications();
+
+            for(Modification mo:modList){
+                modHashCode = modHashCode+mo.getName().hashCode();
+            }
+        }
+
+        return nameHashCode+modHashCode;
+
+    }
 
     }
 

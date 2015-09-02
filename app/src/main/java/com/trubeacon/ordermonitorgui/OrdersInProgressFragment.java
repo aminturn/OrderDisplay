@@ -201,7 +201,6 @@ public class OrdersInProgressFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         String mId = sharedPref.getString(getString(R.string.merchant_id_key), "");
@@ -241,8 +240,6 @@ public class OrdersInProgressFragment extends Fragment {
             });
         }
 
-
-
         View scrollAndClearBtnLinLay = inflater.inflate(R.layout.fragment_orders_in_progress, container, false);
 
 
@@ -253,12 +250,10 @@ public class OrdersInProgressFragment extends Fragment {
         horizLinearLayout = (LinearLayout) scrollView.findViewById(R.id.horiz_lin_layout);
 
 
-
         DisplayMetrics dm = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
 
         screenWidthDp = dm.widthPixels;
-
 
         //get display preferences
 
@@ -281,7 +276,6 @@ public class OrdersInProgressFragment extends Fragment {
         ActionBar actionBar = ((MainActivity) getActivity()).getSupportActionBar();
         actionBar.setTitle(actionBarTitle);
         actionBar.setDisplayHomeAsUpEnabled(false);
-
 
         return scrollAndClearBtnLinLay;
 
@@ -378,8 +372,8 @@ public class OrdersInProgressFragment extends Fragment {
 
                 String detailString = "";
 
-                List<LineItem> rawLiList= topOrder.getLineItems();
-                Set<LineItem> lineItemList = new HashSet<>();
+                List<LineItem> rawLineItemList = topOrder.getLineItems();
+                List<LineItem> lineItemList = checkForDuplicateLineItems(rawLineItemList);
 
 
                 if(lineItemList!=null) {
@@ -559,7 +553,8 @@ public class OrdersInProgressFragment extends Fragment {
 
                     orderTitleText2.setText(timeCreatedString2);
 
-                    List<LineItem> lineItemList2 = bottomOrder.getLineItems();
+                    List<LineItem> rawlineItemList2 = bottomOrder.getLineItems();
+                    List<LineItem> lineItemList2 = checkForDuplicateLineItems(rawlineItemList2);
 
                     if(lineItemList2!=null) {
                         for (LineItem li2 : lineItemList2) {
@@ -715,7 +710,9 @@ public class OrdersInProgressFragment extends Fragment {
 
             orderTitleText.setText(timeCreatedString);
 
-            List<LineItem> lineItemList = thisOrder.getLineItems();
+            List<LineItem> rawLineItemList = thisOrder.getLineItems();
+
+            List<LineItem> lineItemList = checkForDuplicateLineItems(rawLineItemList);
 
             String detailString = "";
 
@@ -799,38 +796,55 @@ public class OrdersInProgressFragment extends Fragment {
 
     private List<LineItem> checkForDuplicateLineItems(List<LineItem> rawLiList){
 
-        TreeSet<LineItem> noDupeTreeSet = new TreeSet<LineItem>(new Comparator<LineItem>() {
-            @Override
-            public int compare(LineItem li1, LineItem li2) {
+        List<Integer> hashList = new ArrayList<>();
+        HashMap<Integer,LineItem> lineItemHashMap = new HashMap<>();
+        List<LineItem> noDupeList = new ArrayList<>();
 
-                if(li1.getName().equals(li2.getName())) {
-                    //if one, but not both is null, theyre not dupes
-                    if(li1.getModifications()==null^li2.getModifications()==null) {
-                    return -1;
-                    }
+        for(LineItem li:rawLiList){
+            int hash = hashCode(li);
+            lineItemHashMap.put(hash,li);
+            hashList.add(hash);
+        }
 
-                    //at this point, if one's null both are, so only need to check one
-                    if(li1.getModifications()!=null) {
-                        List<Modification> modList1 = li1.getModifications();
-                        List<Modification> modList2 = li2.getModifications();
+        for(Integer hashFromMap:lineItemHashMap.keySet()){
+            int dupeCount = 0;
 
-
-                        }
-
-                    }
-                    else {
-                      return -1;
-                    }
-
-
-                return 0;
+            for(Integer hashFromList:hashList) {
+                if (hashFromList.equals(hashFromMap)) {
+                    dupeCount++;
+                }
             }
-        });
+
+            if(dupeCount>1){
+                LineItem updateNameLi = lineItemHashMap.get(hashFromMap);
+                String liName = String.valueOf(dupeCount) + " " + updateNameLi.getName();
+                updateNameLi.setName(liName);
+                lineItemHashMap.put(hashFromMap,updateNameLi);
+            }
+
+            noDupeList.add(lineItemHashMap.get(hashFromMap));
+        }
 
 
-
+        return noDupeList;
     }
 
+
+    private int hashCode(LineItem lineItem){
+
+        int nameHashCode = lineItem.getName().hashCode();
+
+        int modHashCode = 0;
+
+        if(lineItem.getModifications()!=null){
+            List<Modification> modList= lineItem.getModifications();
+
+            for(Modification mo:modList){
+                modHashCode = modHashCode+mo.getName().hashCode();
+            }
+        }
+
+        return nameHashCode+modHashCode;
 
     }
 
