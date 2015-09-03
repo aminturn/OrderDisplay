@@ -399,8 +399,6 @@ public class OrdersInProgressFragment extends Fragment {
                 if(lineItemList!=null) {
                     for (LineItem li : lineItemList) {
 
-                        //TODO: check for duplicate line items and place them on the same line
-
                         if(orderMonitorData.showLineItem(li.getName())) {
                             detailString = detailString + String.valueOf(Character.toChars(9654))+ li.getName() + "\r\n";
 
@@ -455,17 +453,43 @@ public class OrdersInProgressFragment extends Fragment {
                 orderDetailText.setMovementMethod(new ScrollingMovementMethod());
 
                 DateTime orderCreated = new DateTime(topOrder.getCreatedTime());
-                String timeCreatedString = DateTimeFormat.forPattern("hh:mm:ss a").print(orderCreated);
+
+
+                boolean showTimeTicket = sp.getBoolean(getString(R.string.show_time_stamp_and_ticket_number),true);
+
+                String timeCreatedString = "";
+
+                String orderTitle = "";
+
+                if(topOrder.getTitle()!=null){
+                    orderTitle = topOrder.getTitle();
+                }
+
+                if(showTimeTicket){
+                    timeCreatedString = "#" + orderTitle + " " + DateTimeFormat.forPattern("hh:mm a").print(orderCreated);
+                }
+
 
                 if(showOrderType) {
-                    timeCreatedString = timeCreatedString + "\r\n" + label;
+                    if(showTimeTicket){
+                        timeCreatedString = timeCreatedString + "\r\n";
+                    }
+                    timeCreatedString = timeCreatedString + label;
                 }
 
                 if(showOrigin){
-                    timeCreatedString = timeCreatedString + "\r\n" + origin;
+                    if(showOrderType||showTimeTicket){
+                        timeCreatedString = timeCreatedString+"\r\n";
+                    }
+                    timeCreatedString = timeCreatedString + origin;
                 }
 
-                orderTitleText.setText(timeCreatedString);
+                if(!timeCreatedString.equals("")) {
+                    orderTitleText.setText(timeCreatedString);
+                }else{
+                    orderTitleText.setVisibility(View.GONE);
+                }
+
                 orderDetailText.setText(detailString);
 
                 //add a index as a tag to reference the order in the click listener
@@ -561,17 +585,38 @@ public class OrdersInProgressFragment extends Fragment {
                     orderDetailText2.setMovementMethod(new ScrollingMovementMethod());
 
                     DateTime orderCreated2 = new DateTime(bottomOrder.getCreatedTime());
-                    String timeCreatedString2 = DateTimeFormat.forPattern("hh:mm:ss a").print(orderCreated2);
+
+                    String timeCreatedString2 = "";
+
+                    String orderTitle2 = "";
+
+                    if(bottomOrder.getTitle()!=null){
+                        orderTitle2 = bottomOrder.getTitle();
+                    }
+
+                    if(showTimeTicket){
+                        timeCreatedString2 = "#" + orderTitle2 + " " + DateTimeFormat.forPattern("hh:mm a").print(orderCreated2);
+                    }
 
                     if(showOrderType) {
-                        timeCreatedString2 = timeCreatedString2 + "\r\n" + label2;
+                        if(showTimeTicket){
+                            timeCreatedString2 = timeCreatedString2 + "\r\n";
+                        }
+                        timeCreatedString2 = timeCreatedString2 + label2;
                     }
 
                     if(showOrigin){
-                        timeCreatedString2 = timeCreatedString2 + "\r\n" + origin2;
+                        if(showOrderType||showTimeTicket){
+                            timeCreatedString2 = timeCreatedString2 + "\r\n";
+                        }
+                        timeCreatedString2 = timeCreatedString2 + origin2;
                     }
 
-                    orderTitleText2.setText(timeCreatedString2);
+                    if(!timeCreatedString2.equals("")) {
+                        orderTitleText2.setText(timeCreatedString2);
+                    }else{
+                        orderTitleText2.setVisibility(View.GONE);
+                    }
 
                     List<LineItem> rawlineItemList2 = bottomOrder.getLineItems();
                     List<LineItem> lineItemList2 = checkForDuplicateLineItems(rawlineItemList2);
@@ -718,17 +763,42 @@ public class OrdersInProgressFragment extends Fragment {
             orderDetailText.setMovementMethod(new ScrollingMovementMethod());
 
             DateTime orderCreated = new DateTime(thisOrder.getCreatedTime());
-            String timeCreatedString = DateTimeFormat.forPattern("hh:mm:ss a").print(orderCreated);
+
+
+            boolean showTimeTicket = sp.getBoolean(getString(R.string.show_time_stamp_and_ticket_number),true);
+
+            String timeCreatedString = "";
+
+            String orderTitle = "";
+
+            if(thisOrder.getTitle()!=null){
+                orderTitle = thisOrder.getTitle();
+            }
+
+            if(showTimeTicket){
+                timeCreatedString = "#" + orderTitle + " " + DateTimeFormat.forPattern("hh:mm a").print(orderCreated);
+            }
+
 
             if(showOrderType) {
-                timeCreatedString = timeCreatedString + "\r\n" + label;
+                if(showTimeTicket){
+                    timeCreatedString = timeCreatedString+"\r\n";
+                }
+                timeCreatedString = timeCreatedString  + label;
             }
 
             if(showOrigin){
-                timeCreatedString = timeCreatedString + "\r\n" + origin;
+                if(showOrderType||showTimeTicket){
+                    timeCreatedString = timeCreatedString+"\r\n";
+                }
+                timeCreatedString = timeCreatedString  + origin;
             }
 
-            orderTitleText.setText(timeCreatedString);
+            if(!timeCreatedString.equals("")) {
+                orderTitleText.setText(timeCreatedString);
+            }else{
+                orderTitleText.setVisibility(View.GONE);
+            }
 
             List<LineItem> rawLineItemList = thisOrder.getLineItems();
 
@@ -743,10 +813,6 @@ public class OrdersInProgressFragment extends Fragment {
                     if(orderMonitorData.showLineItem(li.getName())) {
 
                         detailString = detailString + String.valueOf(Character.toChars(9654)) + li.getName() + "\r\n";
-
-                        if(li.getUserData()!=null) {
-                            Log.v("line item userdata", li.getUserData());
-                        }
 
                         List<Modification> modList = li.getModifications();
                         if (modList != null) {

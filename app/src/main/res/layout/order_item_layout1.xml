@@ -17,13 +17,13 @@
     <TextView
         android:layout_below = "@id/countdown_text"
         android:id = "@+id/order_id_text"
+        android:minHeight="0dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:padding="2dp"
         android:background = "@color/dark_blue"
-        android:textColor="@color/white"
-        android:text = "Order ID"/>
+        android:textColor="@color/white" />
 
     <Button
         android:id = "@+id/done_button"

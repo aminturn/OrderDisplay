@@ -44,6 +44,11 @@
             android:title = "Play notification sound when new order is placed"
             android:defaultValue="true"/>
 
+        <CheckBoxPreference
+            android:key = "@string/show_time_stamp_and_ticket_number"
+            android:title="Show time stamp and ticket number?"
+            android:defaultValue="true"/>
+
 
             <CheckBoxPreference
                 android:key = "@string/display_order_type_pref"

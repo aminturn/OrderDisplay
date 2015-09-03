@@ -176,5 +176,6 @@
 
     <string name = "play_notification_pref">play_notification_pref</string>
 
+    <string name = "show_time_stamp_and_ticket_number">show_time_stamp_and_ticket_number</string>
 
 </resources>
