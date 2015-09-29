@@ -176,6 +176,7 @@ public class OrderMonitorData {
             @Override
             public void onFailGetDevices(Error error) {
                 Log.v("failed to get devices", error.getMessage());
+                OrderMonitorBroadcaster.sendBroadcast(BroadcastEvent.REFRESH_DEVICES_AND_ORDER_TYPES);
             }
         });
     }
@@ -193,6 +194,7 @@ public class OrderMonitorData {
             @Override
             public void onFailGetOrderTypes(Error error) {
                 Log.v("failed get order types", error.getMessage());
+                OrderMonitorBroadcaster.sendBroadcast(BroadcastEvent.REFRESH_DEVICES_AND_ORDER_TYPES);
             }
         });
 
@@ -212,6 +214,7 @@ public class OrderMonitorData {
             public void onFailGetTags(Error error) {
 
                 Log.v("failed to get tags", error.getMessage());
+                OrderMonitorBroadcaster.sendBroadcast(BroadcastEvent.REFRESH_DEVICES_AND_ORDER_TYPES);
 
             }
         });
@@ -273,6 +276,8 @@ public class OrderMonitorData {
                             @Override
                             public void onFailGetOrders(com.tru.clover.api.client.error.Error error) {
                                 Log.e("Failed to fetch orders", error.getMessage());
+
+                                OrderMonitorBroadcaster.sendBroadcast(BroadcastEvent.REFRESH_ORDERS);
                             }
 
                         },
