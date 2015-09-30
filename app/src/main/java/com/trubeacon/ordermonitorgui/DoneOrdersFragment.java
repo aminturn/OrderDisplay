@@ -52,7 +52,7 @@ public class DoneOrdersFragment extends Fragment {
         private String ORDER_TYPE_KEY = "order type preference";
 
         private static String FONT_SIZE_KEY = "font size preference";
-        private static int refreshRateMs = 5000;
+        private static int refreshRateMs;
 
         private int previousListSize = 0;
         private float fontSize;
@@ -61,6 +61,7 @@ public class DoneOrdersFragment extends Fragment {
         private boolean showDevice;
         private boolean showTimer;
         private ActionBar actionBar;
+        private boolean isOrderUndoneReceiverRegistered = false;
 
         private Integer screenWidthDp;
         private OrderMonitorData orderMonitorData = OrderMonitorData.getOrderMonitorData();
@@ -113,6 +114,19 @@ public class DoneOrdersFragment extends Fragment {
         };
 
 
+        //TODO: order marked undone receiver
+
+        private BroadcastReceiver orderUndoneReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                OrderMonitorBroadcaster.unregisterReceiver(this);
+                isOrderUndoneReceiverRegistered=false;
+                OrderMonitorBroadcaster.registerReceiver(ordersBroadcastReceiver, OrderMonitorData.BroadcastEvent.REFRESH_ORDERS);
+                doneOrdersHandler.post(doneOrdersRunnable);
+            }
+        };
+
+
         @Override
         public void onResume() {
             super.onResume();
@@ -161,6 +175,10 @@ public class DoneOrdersFragment extends Fragment {
             }
 
             String fontSizeString = sharedPref.getString(FONT_SIZE_KEY,"30");
+
+            String refreshRateString = sharedPref.getString(getString(R.string.refresh_rate_key), "5");
+            int refreshRateSecs = Integer.parseInt(refreshRateString);
+            refreshRateMs = refreshRateSecs*1000;
 
             fontSize = Integer.parseInt(fontSizeString);
 
@@ -399,6 +417,16 @@ public class DoneOrdersFragment extends Fragment {
 
                             Order doneOrder = doneOrdersList.get((Integer) v.getTag() - 1);
 
+                            //TODO: wait for order to be marked undone
+
+                            OrderMonitorBroadcaster.unregisterReceiver(ordersBroadcastReceiver);
+                            doneOrdersHandler.removeCallbacks(doneOrdersRunnable);
+
+                            if(!isOrderUndoneReceiverRegistered) {
+                                OrderMonitorBroadcaster.registerReceiver(orderUndoneReceiver, OrderMonitorData.BroadcastEvent.ORDER_DONE);
+                                isOrderUndoneReceiverRegistered=true;
+                            }
+
                             orderMonitorData.markUnDone(doneOrder.getId(),doneOrder);
 
                             parentView.setLayoutTransition(lt);
@@ -553,6 +581,15 @@ public class DoneOrdersFragment extends Fragment {
                                 //remove the order from the list (subtract one to reference the zero-based list)
 
                                 Order doneOrder = doneOrdersList.get((Integer) v.getTag() - 1);
+
+                                OrderMonitorBroadcaster.unregisterReceiver(ordersBroadcastReceiver);
+                                doneOrdersHandler.removeCallbacks(doneOrdersRunnable);
+
+                                if(!isOrderUndoneReceiverRegistered) {
+                                    OrderMonitorBroadcaster.registerReceiver(orderUndoneReceiver, OrderMonitorData.BroadcastEvent.ORDER_DONE);
+                                    isOrderUndoneReceiverRegistered=true;
+                                }
+
                                 orderMonitorData.markUnDone(doneOrder.getId(), doneOrder);
                                 parentView.setLayoutTransition(lt);
                                 v.setVisibility(View.INVISIBLE);
@@ -726,6 +763,17 @@ public class DoneOrdersFragment extends Fragment {
 
                         //remove the order from the list (subtract one to reference the zero-based list)
                         Order doneOrder = doneOrdersList.get((Integer) v.getTag() - 1);
+
+                        //TODO:wait for order to be marked undone
+
+                        OrderMonitorBroadcaster.unregisterReceiver(ordersBroadcastReceiver);
+                        doneOrdersHandler.removeCallbacks(doneOrdersRunnable);
+
+                        if(!isOrderUndoneReceiverRegistered) {
+                            OrderMonitorBroadcaster.registerReceiver(orderUndoneReceiver, OrderMonitorData.BroadcastEvent.ORDER_DONE);
+                            isOrderUndoneReceiverRegistered=true;
+                        }
+
                         orderMonitorData.markUnDone(doneOrder.getId(),doneOrder);
 
                         parentView.setLayoutTransition(lt);

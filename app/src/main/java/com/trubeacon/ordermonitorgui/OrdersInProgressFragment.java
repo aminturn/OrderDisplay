@@ -80,14 +80,13 @@ public class OrdersInProgressFragment extends Fragment {
     private LayoutInflater mLayoutInflater;
     private List<Button> buttonList = new ArrayList<>();
 
-
     private ActionBar actionBar;
 
     private Handler periodicUpdateHandler = new Handler();
 
     private Handler countdownHandler = new Handler();
 
-    private static int refreshRateMs = 5000;
+    private static int refreshRateMs;
 
     private boolean twoRows;
     private boolean showOrderType;
@@ -95,6 +94,7 @@ public class OrdersInProgressFragment extends Fragment {
     private float fontSize;
     private boolean showTimer;
     private int previousListSize = 0;
+    private boolean isOrderDoneReceiverRegistered=false;
 
     private Integer screenWidthDp;
     private OrderMonitorData orderMonitorData = OrderMonitorData.getOrderMonitorData();
@@ -144,6 +144,18 @@ public class OrdersInProgressFragment extends Fragment {
         }
     };
 
+    //TODO: create an ordermarkeddone receiver, register the broadcast receiver and post the periodic runnable
+
+    private BroadcastReceiver orderDoneReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            OrderMonitorBroadcaster.unregisterReceiver(this);
+            isOrderDoneReceiverRegistered=false;
+            OrderMonitorBroadcaster.registerReceiver(ordersBroadcastReceiver,OrderMonitorData.BroadcastEvent.REFRESH_ORDERS);
+            periodicUpdateHandler.post(periodicUpdateRunnable);
+        }
+    };
+
     @Override
     public void onResume() {
         super.onResume();
@@ -158,6 +170,7 @@ public class OrdersInProgressFragment extends Fragment {
         periodicUpdateHandler.removeCallbacks(periodicUpdateRunnable);
         countdownHandler.removeCallbacks(updateCountdown);
         OrderMonitorBroadcaster.unregisterReceiver(ordersBroadcastReceiver);
+        OrderMonitorBroadcaster.unregisterReceiver(orderDoneReceiver);
     }
 
     @Override
@@ -271,6 +284,10 @@ public class OrdersInProgressFragment extends Fragment {
         }
 
         String fontSizeString = sharedPref.getString(getString(R.string.font_size_pref), "30");
+
+        String refreshRateString = sharedPref.getString(getString(R.string.refresh_rate_key), "5");
+        int refreshRateSecs = Integer.parseInt(refreshRateString);
+        refreshRateMs = refreshRateSecs*1000;
 
         fontSize = Integer.parseInt(fontSizeString);
 
@@ -522,10 +539,24 @@ public class OrdersInProgressFragment extends Fragment {
 
                         //progressOrdersList.remove((Integer) v.getTag() - 1);
 
-                        orderMonitorData.markDone(doneOrder.getId(),doneOrder);
+                        //TODO: remove callbacks to periodic runnable from periodic handlers
+                        //TODO: unregister orders broadcast receiver in case request already in process
+
+                        //TODO: this needs to be done in case getorders comes back before the order can be marked done
+                        //TODO: in which case is will be redrawn until the following getorders comes in with the order marked as done
+                        //TODO: order display premium already takes care of this
+
+                        OrderMonitorBroadcaster.unregisterReceiver(ordersBroadcastReceiver);
+                        periodicUpdateHandler.removeCallbacks(periodicUpdateRunnable);
+
+                        if(!isOrderDoneReceiverRegistered) {
+                            OrderMonitorBroadcaster.registerReceiver(orderDoneReceiver, OrderMonitorData.BroadcastEvent.ORDER_DONE);
+                            isOrderDoneReceiverRegistered=true;
+                        }
+
+                        orderMonitorData.markDone(doneOrder.getId(), doneOrder);
                         parentView.setLayoutTransition(lt);
                         v.setVisibility(View.INVISIBLE);
-
                     }
                 });
 
@@ -681,6 +712,16 @@ public class OrdersInProgressFragment extends Fragment {
                             //remove the order from the list (subtract one to reference the zero-based list)
 
                             Order doneOrder = progressOrdersList.get((Integer) v.getTag() - 1);
+
+                            //TODO: remove callsbacks to periodic runnable from periodic handlers
+                            //TODO: unregister orders broadcast receiver in case request already in process
+
+                            OrderMonitorBroadcaster.unregisterReceiver(ordersBroadcastReceiver);
+                            periodicUpdateHandler.removeCallbacks(periodicUpdateRunnable);
+                            if(!isOrderDoneReceiverRegistered) {
+                                OrderMonitorBroadcaster.registerReceiver(orderDoneReceiver, OrderMonitorData.BroadcastEvent.ORDER_DONE);
+                                isOrderDoneReceiverRegistered=true;
+                            }
 
                             orderMonitorData.markDone(doneOrder.getId(),doneOrder);
                             parentView.setLayoutTransition(lt);
@@ -868,6 +909,17 @@ public class OrdersInProgressFragment extends Fragment {
                     //remove the order from the list (subtract one to reference the zero-based list)
 
                     Order doneOrder = progressOrdersList.get((Integer) v.getTag() - 1);
+
+                    //TODO: remove callbacks to periodic runnable from periodic handlers
+                    //TODO: unregister orders broadcast receiver in case request already in process
+
+                    OrderMonitorBroadcaster.unregisterReceiver(ordersBroadcastReceiver);
+                    periodicUpdateHandler.removeCallbacks(periodicUpdateRunnable);
+
+                    if(!isOrderDoneReceiverRegistered) {
+                        OrderMonitorBroadcaster.registerReceiver(orderDoneReceiver, OrderMonitorData.BroadcastEvent.ORDER_DONE);
+                        isOrderDoneReceiverRegistered=true;
+                    }
 
                     orderMonitorData.markDone(doneOrder.getId(),doneOrder);
 

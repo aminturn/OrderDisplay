@@ -169,13 +169,19 @@
     <string name = "entry3">3 Hrs</string> 
     <string name = "entry3.5">3 Hrs 30 Mins</string> 
     <string name = "entry4">4 Hrs</string> 
-    <string name = "entry4.5">4 Hrs 30 Mins
-    </string> <string name = "entry5">5 Hrs</string>
+    <string name = "entry4.5">4 Hrs 30 Mins</string>
+     <string name = "entry5">5 Hrs</string>
      <string name = "entry5.5">5 Hrs 30 Mins</string> 
     <string name = "entry6">6 Hrs</string>
 
     <string name = "play_notification_pref">play_notification_pref</string>
 
     <string name = "show_time_stamp_and_ticket_number">show_time_stamp_and_ticket_number</string>
+
+    <string name = "refresh_rate_key">refresh_rate_key</string>
+
+    <string name = "sec1">1 Second</string>
+    <string name = "sec5">5 Seconds</string>
+    <string name = "sec10">10 Seconds</string>
 
 </resources>

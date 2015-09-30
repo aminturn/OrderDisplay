@@ -31,12 +31,20 @@
             android:entryValues="@array/font_pref_values_array"
             android:defaultValue="@string/str20"/>
 
-            <ListPreference
-                android:key = "@string/age_of_orders_pref"
-                android:title = "Age of orders to display"
-                android:entries = "@array/order_age_entries"
-                android:entryValues="@array/order_age_values"
-                android:defaultValue="@string/str1.5"/>
+        <ListPreference
+            android:key = "@string/age_of_orders_pref"
+            android:title = "Age of orders to display"
+            android:entries = "@array/order_age_entries"
+            android:entryValues="@array/order_age_values"
+            android:defaultValue="@string/str1.5"/>
+
+        <ListPreference
+            android:key = "@string/refresh_rate_key"
+            android:title = "Refresh rate"
+            android:entries = "@array/refresh_rate_entries"
+            android:entryValues="@array/refresh_rate_vals"
+            android:defaultValue="@string/str5"
+            android:summary = "Rate at which Clover is queried for new orders"/>
 
 
         <CheckBoxPreference

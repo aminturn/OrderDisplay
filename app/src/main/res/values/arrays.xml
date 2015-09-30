@@ -95,4 +95,16 @@
         <item>@string/str5.5</item> 
         <item>@string/str6</item> </array>
 
+    <array name = "refresh_rate_entries">
+        <item>@string/sec1</item>
+        <item>@string/sec5</item>
+        <item>@string/sec10</item>
+    </array>
+
+    <array name = "refresh_rate_vals">
+        <item>@string/str1</item>
+        <item>@string/str5</item>
+        <item>@string/str10</item>
+    </array>
+
 </resources>

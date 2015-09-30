@@ -236,7 +236,7 @@ public class OrderMonitorData {
         int ageOfOrdersMinutes = (int) (ageOfOrdersHours*60);
 
         DateTime start = DateTime.now().minusMinutes(ageOfOrdersMinutes);
-        DateTime stop = DateTime.now();
+        DateTime stop = DateTime.now().plusMinutes(10);
 
         if(mId.equals("")||token.equals("")){
             Toast.makeText(OrderMonitorGUI.getAppContext(), "Please connect to your Clover account from the Settings menu", Toast.LENGTH_LONG).show();
@@ -334,11 +334,13 @@ public class OrderMonitorData {
         CloverService.getService().updateOrder(mId, token, orderId, updateOrder, new UpdateOrder.UpdateOrderCallback() {
             @Override
             public void onUpdateOrder(Order order) {
+                OrderMonitorBroadcaster.sendBroadcast(BroadcastEvent.ORDER_DONE);
                 Log.v("order updated", "order updated");
             }
 
             @Override
             public void onFailUpdateOrder(com.tru.clover.api.client.error.Error error) {
+                OrderMonitorBroadcaster.sendBroadcast(BroadcastEvent.ORDER_DONE);
                 Log.v("failed to update order", error.getMessage());
             }
         });
@@ -352,11 +354,15 @@ public class OrderMonitorData {
             @Override
             public void onUpdateOrder(Order order) {
                 Log.v("order updated", "order updated");
+
+                OrderMonitorBroadcaster.sendBroadcast(BroadcastEvent.ORDER_DONE);
             }
 
             @Override
             public void onFailUpdateOrder(com.tru.clover.api.client.error.Error error) {
                 Log.v("failed to update order", error.getMessage());
+
+                OrderMonitorBroadcaster.sendBroadcast(BroadcastEvent.ORDER_DONE);
             }
         });
     }
@@ -448,10 +454,12 @@ public class OrderMonitorData {
     public enum BroadcastEvent{
 
         REFRESH_ORDERS,
-        REFRESH_DEVICES_AND_ORDER_TYPES;
+        REFRESH_DEVICES_AND_ORDER_TYPES,
+        ORDER_DONE;
 
         public static final String REFRESH_ORDERS_VALUE = "REFRESH_ORDERS";
         public static final String REFRESH_DEVS_AND_ORDER_TYPES_VALUE = "REFRESH_DEVICES_AND_ORDER_TYPES";
+        public static final String ORDER_DONE_VALUE = "ORDER_DONE";
 
     }
 
