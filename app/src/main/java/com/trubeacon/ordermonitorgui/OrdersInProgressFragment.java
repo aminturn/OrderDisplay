@@ -26,6 +26,7 @@ import android.text.method.ScrollingMovementMethod;
 import android.transition.Transition;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -72,7 +73,7 @@ import java.util.TreeSet;
  * Created by Andrew on 4/30/2015.
  */
 
-public class OrdersInProgressFragment extends Fragment {
+public class OrdersInProgressFragment extends Fragment implements KeyEvent.Callback{
 
     private List<Order> progressOrdersList = new ArrayList<>();
 
@@ -155,6 +156,8 @@ public class OrdersInProgressFragment extends Fragment {
             periodicUpdateHandler.post(periodicUpdateRunnable);
         }
     };
+
+
 
     @Override
     public void onResume() {
@@ -713,7 +716,7 @@ public class OrdersInProgressFragment extends Fragment {
 
                             Order doneOrder = progressOrdersList.get((Integer) v.getTag() - 1);
 
-                            //TODO: remove callsbacks to periodic runnable from periodic handlers
+                            //TODO: remove callbacks to periodic runnable from periodic handlers
                             //TODO: unregister orders broadcast receiver in case request already in process
 
                             OrderMonitorBroadcaster.unregisterReceiver(ordersBroadcastReceiver);
@@ -986,5 +989,34 @@ public class OrdersInProgressFragment extends Fragment {
 
     }
 
+    @Override
+    public boolean onKeyDown(int i, KeyEvent keyEvent) {
+        return false;
+    }
 
+    @Override
+    public boolean onKeyLongPress(int i, KeyEvent keyEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onKeyUp(int i, KeyEvent keyEvent) {
+        //TODO:listen for 0-9 from the keyboard
+        switch(i){
+            case KeyEvent.KEYCODE_0:
+                Log.v("keycode","zero pressed");
+                return true;
+            case KeyEvent.KEYCODE_1:
+                Log.v("keycode","one preseed");
+                return true;
+            default:
+                Log.v("default","default");
+                return true;
+        }
+    }
+
+    @Override
+    public boolean onKeyMultiple(int i, int i1, KeyEvent keyEvent) {
+        return false;
+    }
 }
