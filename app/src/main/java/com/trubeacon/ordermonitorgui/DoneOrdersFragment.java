@@ -19,6 +19,7 @@ import android.support.v7.app.ActionBar;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -838,6 +839,5 @@ public class DoneOrdersFragment extends Fragment {
         return nameHashCode+modHashCode;
 
     }
-
-    }
+}
 

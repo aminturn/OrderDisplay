@@ -73,7 +73,7 @@ import java.util.TreeSet;
  * Created by Andrew on 4/30/2015.
  */
 
-public class OrdersInProgressFragment extends Fragment implements KeyEvent.Callback{
+public class OrdersInProgressFragment extends Fragment implements MainActivity.KeyUpCallback{
 
     private List<Order> progressOrdersList = new ArrayList<>();
 
@@ -156,8 +156,6 @@ public class OrdersInProgressFragment extends Fragment implements KeyEvent.Callb
             periodicUpdateHandler.post(periodicUpdateRunnable);
         }
     };
-
-
 
     @Override
     public void onResume() {
@@ -262,7 +260,6 @@ public class OrdersInProgressFragment extends Fragment implements KeyEvent.Callb
         }
 
         View scrollAndClearBtnLinLay = inflater.inflate(R.layout.fragment_orders_in_progress, container, false);
-
 
         View scrollView = scrollAndClearBtnLinLay.findViewById(R.id.scroll_view);
 
@@ -888,6 +885,7 @@ public class OrdersInProgressFragment extends Fragment implements KeyEvent.Callb
 
             buttonList.add(doneButton);
 
+
             doneButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -919,12 +917,12 @@ public class OrdersInProgressFragment extends Fragment implements KeyEvent.Callb
                     OrderMonitorBroadcaster.unregisterReceiver(ordersBroadcastReceiver);
                     periodicUpdateHandler.removeCallbacks(periodicUpdateRunnable);
 
-                    if(!isOrderDoneReceiverRegistered) {
+                    if (!isOrderDoneReceiverRegistered) {
                         OrderMonitorBroadcaster.registerReceiver(orderDoneReceiver, OrderMonitorData.BroadcastEvent.ORDER_DONE);
-                        isOrderDoneReceiverRegistered=true;
+                        isOrderDoneReceiverRegistered = true;
                     }
 
-                    orderMonitorData.markDone(doneOrder.getId(),doneOrder);
+                    orderMonitorData.markDone(doneOrder.getId(), doneOrder);
 
                     parentView.setLayoutTransition(lt);
                     v.setVisibility(View.INVISIBLE);
@@ -990,33 +988,83 @@ public class OrdersInProgressFragment extends Fragment implements KeyEvent.Callb
     }
 
     @Override
-    public boolean onKeyDown(int i, KeyEvent keyEvent) {
-        return false;
-    }
+    public void KeyUp(int i) {
 
-    @Override
-    public boolean onKeyLongPress(int i, KeyEvent keyEvent) {
-        return false;
-    }
+        int orderIndex;
 
-    @Override
-    public boolean onKeyUp(int i, KeyEvent keyEvent) {
-        //TODO:listen for 0-9 from the keyboard
         switch(i){
+            case KeyEvent.KEYCODE_NUMPAD_0:
             case KeyEvent.KEYCODE_0:
-                Log.v("keycode","zero pressed");
-                return true;
+                orderIndex = 0;
+                break;
+            case KeyEvent.KEYCODE_NUMPAD_1:
             case KeyEvent.KEYCODE_1:
-                Log.v("keycode","one preseed");
-                return true;
+                orderIndex = 1;
+                break;
+            case KeyEvent.KEYCODE_NUMPAD_2:
+            case KeyEvent.KEYCODE_2:
+                orderIndex = 2;
+                break;
+            case KeyEvent.KEYCODE_NUMPAD_3:
+            case KeyEvent.KEYCODE_3:
+                orderIndex = 3;
+                break;
+            case KeyEvent.KEYCODE_NUMPAD_4:
+            case KeyEvent.KEYCODE_4:
+                orderIndex = 4;
+                break;
+            case KeyEvent.KEYCODE_NUMPAD_5:
+            case KeyEvent.KEYCODE_5:
+                orderIndex = 5;
+                break;
+            case KeyEvent.KEYCODE_NUMPAD_6:
+            case KeyEvent.KEYCODE_6:
+                orderIndex = 6;
+                break;
+            case KeyEvent.KEYCODE_NUMPAD_7:
+            case KeyEvent.KEYCODE_7:
+                orderIndex = 7;
+                break;
+            case KeyEvent.KEYCODE_NUMPAD_8:
+            case KeyEvent.KEYCODE_8:
+                orderIndex = 8;
+                break;
+            case KeyEvent.KEYCODE_NUMPAD_9:
+            case KeyEvent.KEYCODE_9:
+                orderIndex = 9;
+                break;
             default:
-                Log.v("default","default");
-                return true;
-        }
-    }
+                orderIndex = -1;
+                break;
+        }//end of switch
 
-    @Override
-    public boolean onKeyMultiple(int i, int i1, KeyEvent keyEvent) {
-        return false;
+        if(orderIndex>=0&&orderIndex<progressOrdersList.size()) {
+
+            Order doneOrder = progressOrdersList.get(orderIndex);
+
+            //TODO: buttons are added out of order in the two row view...
+
+            Button doneButton = null;
+
+            for(Button b:buttonList){
+                if((int) b.getTag()==orderIndex+1){
+                    doneButton=b;
+                }
+            }
+
+            OrderMonitorBroadcaster.unregisterReceiver(ordersBroadcastReceiver);
+            periodicUpdateHandler.removeCallbacks(periodicUpdateRunnable);
+
+            if (!isOrderDoneReceiverRegistered) {
+                OrderMonitorBroadcaster.registerReceiver(orderDoneReceiver, OrderMonitorData.BroadcastEvent.ORDER_DONE);
+                isOrderDoneReceiverRegistered = true;
+            }
+
+            orderMonitorData.markDone(doneOrder.getId(), doneOrder);
+
+            if(doneButton!=null) {
+                doneButton.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 }

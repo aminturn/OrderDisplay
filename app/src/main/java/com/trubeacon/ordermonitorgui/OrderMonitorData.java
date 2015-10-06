@@ -397,7 +397,6 @@ public class OrderMonitorData {
                     }
                 }
 
-
                if(onlyShowPaid) {
                    if (order.getOrderType() == null) {
                        if (devicesSelected.contains(order.getDevice().getId()) && hasLineItems&&order.getState().equals(mContext.getString(R.string.locked))) {

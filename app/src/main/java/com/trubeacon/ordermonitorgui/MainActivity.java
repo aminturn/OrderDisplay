@@ -3,6 +3,7 @@ package com.trubeacon.ordermonitorgui;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,15 +27,35 @@ import org.joda.time.DateTime;
 
 public class MainActivity extends ActionBarActivity {
 
+
+    private KeyUpCallback keyUpCallback;
+
+
+    //TODO: save callbacks before rotation and restore after
+
+    public interface KeyUpCallback{
+        void KeyUp(int keyCode);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
 
         setContentView(R.layout.activity_main);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         if(savedInstanceState==null) {
-            getFragmentManager().beginTransaction().add(R.id.container, new OrdersInProgressFragment()).commit();
+            OrdersInProgressFragment ordersInProgressFragment = new OrdersInProgressFragment();
+            getFragmentManager().beginTransaction().add(R.id.container, ordersInProgressFragment).commit();
+            getFragmentManager().executePendingTransactions();
+        }
+
+        Fragment topFragment = getFragmentManager().findFragmentById(R.id.container);
+
+        if(topFragment instanceof OrdersInProgressFragment) {
+            keyUpCallback = (KeyUpCallback) topFragment;
         }
 
     }
@@ -56,11 +77,14 @@ public class MainActivity extends ActionBarActivity {
             return true;
         }
         else if (id==R.id.action_orders_in_progress){
-            getFragmentManager().beginTransaction().replace(R.id.container,new OrdersInProgressFragment()).addToBackStack("").commit();
+            OrdersInProgressFragment ordersInProgressFragment = new OrdersInProgressFragment();
+            keyUpCallback = ordersInProgressFragment;
+            getFragmentManager().beginTransaction().replace(R.id.container,ordersInProgressFragment).addToBackStack("").commit();
             return true;
         }
         else if(id == R.id.action_done_orders){
-            getFragmentManager().beginTransaction().replace(R.id.container,new DoneOrdersFragment()).addToBackStack("").commit();
+            DoneOrdersFragment doneOrdersFragment = new DoneOrdersFragment();
+            getFragmentManager().beginTransaction().replace(R.id.container,doneOrdersFragment).addToBackStack("").commit();
         }
 
         return super.onOptionsItemSelected(item);
@@ -74,5 +98,15 @@ public class MainActivity extends ActionBarActivity {
             } else {
                 super.onBackPressed();
             }
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+
+        Fragment topFragment = getFragmentManager().findFragmentById(R.id.container);
+        if(topFragment instanceof OrdersInProgressFragment){
+            keyUpCallback.KeyUp(keyCode);
+        }
+        return true;
     }
 }
