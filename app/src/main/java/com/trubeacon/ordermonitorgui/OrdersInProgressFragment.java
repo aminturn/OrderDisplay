@@ -297,6 +297,7 @@ public class OrdersInProgressFragment extends Fragment implements MainActivity.K
 
 
         actionBar = ((MainActivity) getActivity()).getSupportActionBar();
+        actionBar.setTitle("ORDERS IN PROGRESS");
         actionBar.setDisplayHomeAsUpEnabled(false);
 
         return scrollAndClearBtnLinLay;
@@ -995,43 +996,43 @@ public class OrdersInProgressFragment extends Fragment implements MainActivity.K
         switch(i){
             case KeyEvent.KEYCODE_NUMPAD_0:
             case KeyEvent.KEYCODE_0:
-                orderIndex = 0;
+                orderIndex = twoRows ? 9:-1;
                 break;
             case KeyEvent.KEYCODE_NUMPAD_1:
             case KeyEvent.KEYCODE_1:
-                orderIndex = 1;
+                orderIndex = 0;
                 break;
             case KeyEvent.KEYCODE_NUMPAD_2:
             case KeyEvent.KEYCODE_2:
-                orderIndex = 2;
+                orderIndex = 1;
                 break;
             case KeyEvent.KEYCODE_NUMPAD_3:
             case KeyEvent.KEYCODE_3:
-                orderIndex = 3;
+                orderIndex = 2;
                 break;
             case KeyEvent.KEYCODE_NUMPAD_4:
             case KeyEvent.KEYCODE_4:
-                orderIndex = 4;
+                orderIndex = 3;
                 break;
             case KeyEvent.KEYCODE_NUMPAD_5:
             case KeyEvent.KEYCODE_5:
-                orderIndex = 5;
+                orderIndex = 4;
                 break;
             case KeyEvent.KEYCODE_NUMPAD_6:
             case KeyEvent.KEYCODE_6:
-                orderIndex = 6;
+                orderIndex = twoRows ? 5:-1;
                 break;
             case KeyEvent.KEYCODE_NUMPAD_7:
             case KeyEvent.KEYCODE_7:
-                orderIndex = 7;
+                orderIndex = twoRows ? 6:-1;
                 break;
             case KeyEvent.KEYCODE_NUMPAD_8:
             case KeyEvent.KEYCODE_8:
-                orderIndex = 8;
+                orderIndex = twoRows ? 7:-1;
                 break;
             case KeyEvent.KEYCODE_NUMPAD_9:
             case KeyEvent.KEYCODE_9:
-                orderIndex = 9;
+                orderIndex = twoRows ? 8:-1;
                 break;
             default:
                 orderIndex = -1;
@@ -1041,8 +1042,6 @@ public class OrdersInProgressFragment extends Fragment implements MainActivity.K
         if(orderIndex>=0&&orderIndex<progressOrdersList.size()) {
 
             Order doneOrder = progressOrdersList.get(orderIndex);
-
-            //TODO: buttons are added out of order in the two row view...
 
             Button doneButton = null;
 

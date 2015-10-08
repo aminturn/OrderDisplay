@@ -188,6 +188,7 @@ public class DoneOrdersFragment extends Fragment {
             showTimer = sharedPref.getBoolean(getString(R.string.order_timer_pref),true);
 
             actionBar = ((MainActivity) getActivity()).getSupportActionBar();
+            actionBar.setTitle("COMPLETED ORDERS");
             actionBar.setDisplayHomeAsUpEnabled(false);
 
             doneOrdersList = orderMonitorData.getDoneOrdersList();

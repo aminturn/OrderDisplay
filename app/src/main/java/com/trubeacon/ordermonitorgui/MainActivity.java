@@ -31,8 +31,6 @@ public class MainActivity extends ActionBarActivity {
     private KeyUpCallback keyUpCallback;
 
 
-    //TODO: save callbacks before rotation and restore after
-
     public interface KeyUpCallback{
         void KeyUp(int keyCode);
     }
@@ -83,8 +81,7 @@ public class MainActivity extends ActionBarActivity {
             return true;
         }
         else if(id == R.id.action_done_orders){
-            DoneOrdersFragment doneOrdersFragment = new DoneOrdersFragment();
-            getFragmentManager().beginTransaction().replace(R.id.container,doneOrdersFragment).addToBackStack("").commit();
+            getFragmentManager().beginTransaction().replace(R.id.container,new DoneOrdersFragment()).addToBackStack("").commit();
         }
 
         return super.onOptionsItemSelected(item);
